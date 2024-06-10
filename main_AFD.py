@@ -1,11 +1,11 @@
-from tkinter import*
+from tkinter import *
 import re
 from numpy import append
 
 # Ler o arquivo informado pelo usuário e gerar o AFD a partir dele
-def gerarAutomato(nomeArquivo):
+def gerarAutomato():
     try:
-        arquivo = open(nomeArquivo + ".txt" , 'r') # Lendo o arquivo informado pelo usuário
+        arquivo = open("arquivo_AFD.txt" , 'r') # Lendo o arquivo informado pelo usuário
         automato = list()
         # Lendo cada linha do meu arquivo
         # Adicionando as informações do AFD a lista
@@ -75,22 +75,28 @@ def mostrarResultado(validacao, palavra):
     # Se o AFD não reconheceu a palavra
     elif validacao == False:
         mensagem = "O AFD não reconhece a palavra " + palavra    
-    # Se houve um erro na verificação da palavra
+    # Existem simbolos que não estão no alfabeto do autômato
     else:
-        mensagem = "ERRO"
+        mensagem = "A palavra " + palavra + " possui um simbolo que não está no alfabeto"
     
     # Atribuindo ao label a mensagem a ser exibida
     txt_info["text"] = str(mensagem)
 
 def principal():
-    automato = gerarAutomato(input_NomeArquivo.get())
+    automato = gerarAutomato()
     if automato != 'ERRO':
         alfabeto = separarAlfabeto(automato)
+        print(alfabeto)
         estadoInicial = separarEstadoInicial(automato)
+        print(estadoInicial)
         estadosFinais = separarEstadosFinais(automato)
+        print(estadosFinais)
         transicoes = lerRegrasDeTransicao(automato)
+        print(transicoes)
         palavra = input_Palavra.get()
+        print(palavra)
         validacao =  verificarPalavra(alfabeto, estadoInicial, estadosFinais, transicoes, palavra)
+        print(validacao)
         mostrarResultado(validacao, palavra)
     else:
         txt_info["text"] = "Informe um arquivo válido!"
@@ -98,14 +104,6 @@ def principal():
 janela = Tk() # Criando a janela principal
 
 janela.title("Máquina de Autômatos") # Definindo o titulo da janela
-
-# Criando o label de texto e atribuindo a ele uma posição na janela
-txt_inputArquivo = Label(janela, text="Informe o nome do arquivo: ")
-txt_inputArquivo.grid(column=0, row=0, padx=10, pady=10)
-
-# Criando um entry pra receber o nome do arquivo e atribuindo a ele uma posição na janela
-input_NomeArquivo = Entry(janela)
-input_NomeArquivo.grid(column=1, row=0, padx=10, pady=10)
 
 # Criando o label de texto da palavra e atribuindo a ele uma posição na janela
 txt_inputPalavra = Label(janela, text="Informe a palavra: ")
